@@ -10,3 +10,4 @@
 /tests/Tabkit.Tests/bin/Release
 /tests/Tabkit.Tests/obj/Debug
 /tests/Tabkit.Tests/obj/Release
+/src/Tabkit.Cli/obj
