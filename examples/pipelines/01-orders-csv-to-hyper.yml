@@ -1,0 +1,31 @@
+# Example 1: Read a CSV, filter rows, cast types, write a .hyper extract.
+#
+# The simplest replacement for a Prep flow whose only job is "read this CSV,
+# drop the junk rows, save as Hyper so Tableau Desktop opens it fast."
+#
+# Run with: tabkit extract run examples/pipelines/01-orders-csv-to-hyper.yml
+
+name: orders_extract
+
+source:
+  type: csv
+  path: ./data/orders.csv
+  has_header: true
+  separator: ","
+
+transforms:
+  - type: cast
+    columns:
+      order_id: int64
+      total: float64
+      order_date: datetime
+  - type: filter
+    where:
+      - { col: total, op: ">", value: 0 }
+      - { col: order_date, op: ">=", value: "2024-01-01" }
+
+sink:
+  type: hyper
+  path: ./out/orders.hyper
+  table: orders
+  mode: replace

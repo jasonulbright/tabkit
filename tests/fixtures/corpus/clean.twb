@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <datasource caption='Sales' name='federated.sales' version='18.1'>
+      <connection class='excel-direct' filename='sales_q3.xlsx'/>
+      <column datatype='integer' name='[order_id]' role='dimension' type='ordinal'/>
+      <column datatype='real' name='[amount]' role='measure' type='quantitative'/>
+      <column datatype='real' name='[amount_with_fee]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[amount] + 1.25'/>
+      </column>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sales Overview'>
+      <table>
+        <view>
+          <datasources>
+            <datasource name='federated.sales'/>
+          </datasources>
+        </view>
+      </table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Main'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Sales Overview' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

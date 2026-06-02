@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<not-a-workbook>
+  <some-element>this is well-formed XML but the root isn't a workbook</some-element>
+</not-a-workbook>

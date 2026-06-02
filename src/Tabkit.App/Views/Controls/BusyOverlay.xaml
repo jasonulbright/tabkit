@@ -1,0 +1,51 @@
+<UserControl
+    x:Class="Tabkit.App.Views.Controls.BusyOverlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    IsHitTestVisible="False"
+    Background="{DynamicResource ApplicationBackgroundBrush}"
+    Opacity="0.92"
+    Visibility="Collapsed"
+    x:Name="Root">
+
+    <!--
+        Brand standard async progress overlay (C# / WPF-UI variant).
+        Reference: reference_wpf_async_progress_overlay.md.
+        Place as the LAST child in the content grid cell, RowSpan over the
+        whole content area so it visually covers everything below the title bar.
+        Visibility is bound to the page's IsRunning / IsScanning flag.
+        IsHitTestVisible="False" so it doesn't eat clicks during long ops -
+        the page's own commands are already CanExecute-gated.
+    -->
+
+    <StackPanel
+        VerticalAlignment="Center"
+        HorizontalAlignment="Center">
+        <ui:ProgressRing
+            IsIndeterminate="True"
+            Width="56"
+            Height="56"
+            HorizontalAlignment="Center" />
+        <TextBlock
+            x:Name="TitleText"
+            Margin="0,18,0,0"
+            HorizontalAlignment="Center"
+            FontSize="18"
+            FontWeight="SemiBold"
+            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+        <TextBlock
+            x:Name="StepText"
+            Margin="0,8,0,0"
+            HorizontalAlignment="Center"
+            MaxWidth="640"
+            TextWrapping="Wrap"
+            TextAlignment="Center"
+            FontSize="12"
+            FontFamily="Consolas"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+    </StackPanel>
+</UserControl>

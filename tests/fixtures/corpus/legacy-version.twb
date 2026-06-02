@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<workbook source-build='9.0' source-platform='win' version='9.0'>
+  <datasources>
+    <datasource caption='Old Source' name='legacy.old_source' version='9.0'>
+      <connection class='excel-direct' filename='ancient.xls'/>
+      <column datatype='integer' name='[id]' role='dimension' type='ordinal'/>
+      <column datatype='string' name='[label]' role='dimension' type='nominal'/>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Old View'>
+      <table><view><datasources><datasource name='legacy.old_source'/></datasources></view></table>
+    </worksheet>
+  </worksheets>
+</workbook>

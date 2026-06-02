@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <datasource caption='Orders' name='federated.orders' version='18.1'>
+      <connection class='sqlserver' server='db.internal.example.com' dbname='Orders'/>
+      <column datatype='integer' name='[order_id]' role='dimension' type='ordinal'/>
+      <column datatype='real' name='[total]' role='measure' type='quantitative'/>
+      <column datatype='real' name='[refund_pct]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[refund_amount] / [total]'/>
+      </column>
+      <column datatype='string' name='[customer_label]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='[customer_name] + " (#" + STR([id_short]) + ")"'/>
+      </column>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Refunds'>
+      <table><view><datasources><datasource name='federated.orders'/></datasources></view></table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Refund Watch'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Refunds' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

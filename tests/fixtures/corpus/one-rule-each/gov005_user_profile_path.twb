@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!--
+  Fires GOV005 exactly once: connection filename points into a Windows
+  user-profile path. No password, no external server, no PII pattern,
+  no USERNAME() calc.
+-->
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <datasource caption='Scratch' name='federated.scratch' version='18.1'>
+      <connection class='textscan' filename='C:\Users\jdoe\Documents\scratch.csv'/>
+      <column datatype='integer' name='[id]' role='dimension' type='ordinal'/>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sheet'>
+      <table><view><datasources><datasource name='federated.scratch'/></datasources></view></table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Main'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Sheet' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

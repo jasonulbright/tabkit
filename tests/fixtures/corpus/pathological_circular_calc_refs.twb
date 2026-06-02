@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!--
+  Pathological: two calculated fields with mutually-recursive references.
+  [a] = [b] + 1 and [b] = [a] - 1 on the same datasource. Both column refs
+  resolve (neither is missing), so AUD005 must NOT fire. The parser must
+  not throw; cycle detection is out of scope for this fixture.
+-->
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <datasource caption='Circular' name='federated.circular' version='18.1'>
+      <connection class='excel-direct' filename='circular.xlsx'/>
+      <column datatype='real' name='[a]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[b] + 1'/>
+      </column>
+      <column datatype='real' name='[b]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[a] - 1'/>
+      </column>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sheet'>
+      <table><view><datasources><datasource name='federated.circular'/></datasources></view></table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Main'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Sheet' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

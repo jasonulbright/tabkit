@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <!-- Bad data source: embedded password, external server, PII columns,
+         USERNAME-based ad-hoc RLS, deprecated function, broken column ref. -->
+    <datasource caption='Customers' name='federated.customers' version='18.1'>
+      <connection class='sqlserver' server='prod-db.evil-corp.example' dbname='Sales' username='svc_tableau' password='hunter2'/>
+      <column datatype='integer' name='[customer_id]' role='dimension' type='ordinal'/>
+      <column datatype='string' name='[ssn]' role='dimension' type='nominal' caption='SSN'/>
+      <column datatype='string' name='[email]' role='dimension' type='nominal'/>
+      <column datatype='date' name='[date_of_birth]' role='dimension' type='ordinal'/>
+      <column datatype='real' name='[ltv]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='ATTR([revenue]) * 12'/>
+      </column>
+      <column datatype='string' name='[me_only]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='IF USERNAME() = &quot;admin&quot; THEN [ssn] ELSE NULL END'/>
+      </column>
+      <column datatype='real' name='[broken_calc]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[nonexistent_column] * 2'/>
+      </column>
+    </datasource>
+
+    <!-- A duplicate calc lives here too -->
+    <datasource caption='Customers Mirror' name='federated.customers_mirror' version='18.1'>
+      <connection class='sqlserver' server='prod-db.evil-corp.example' dbname='SalesMirror'/>
+      <column datatype='integer' name='[customer_id]' role='dimension' type='ordinal'/>
+      <column datatype='real' name='[revenue]' role='measure' type='quantitative'/>
+      <column datatype='real' name='[ltv_mirror]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='ATTR([revenue]) * 12'/>
+      </column>
+    </datasource>
+
+    <!-- Local user-profile path -->
+    <datasource caption='Scratch CSV' name='federated.scratch' version='18.1'>
+      <connection class='textscan' filename='C:\Users\jane.doe\Desktop\local-tweaks.csv'/>
+      <column datatype='string' name='[junk]' role='dimension' type='nominal'/>
+    </datasource>
+
+    <!-- Orphan: never referenced by any worksheet -->
+    <datasource caption='Orphaned' name='federated.orphan' version='18.1'>
+      <connection class='excel-direct' filename='nobody_uses_me.xlsx'/>
+      <column datatype='string' name='[never_read]' role='dimension' type='nominal'/>
+    </datasource>
+  </datasources>
+
+  <worksheets>
+    <worksheet name='Customer Overview'>
+      <table><view><datasources><datasource name='federated.customers'/></datasources></view></table>
+    </worksheet>
+    <worksheet name='Revenue Mirror'>
+      <table><view><datasources><datasource name='federated.customers_mirror'/></datasources></view></table>
+    </worksheet>
+    <worksheet name='Local Scratch'>
+      <table><view><datasources><datasource name='federated.scratch'/></datasources></view></table>
+    </worksheet>
+    <worksheet name='Never Placed'>
+      <table><view><datasources><datasource name='federated.customers'/></datasources></view></table>
+    </worksheet>
+  </worksheets>
+
+  <dashboards>
+    <dashboard name='Sales Overview'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Customer Overview' type='worksheet'/>
+          <zone id='3' name='Revenue Mirror' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

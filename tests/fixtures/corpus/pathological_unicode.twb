@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!--
+  Pathological: unicode field names — emoji, RTL Arabic, combining diacritic,
+  long Han, and a name that is itself a square-bracket escape sequence.
+  TwbLoader should parse these without throwing or mangling.
+-->
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <datasource caption='Unicode' name='federated.unicode' version='18.1'>
+      <connection class='excel-direct' filename='unicode.xlsx'/>
+      <column datatype='string' name='[🎯 emoji column]' role='dimension' type='nominal'/>
+      <column datatype='string' name='[العنوان]' role='dimension' type='nominal'/>
+      <column datatype='string' name='[café]' role='dimension' type='nominal'/>
+      <column datatype='string' name='[销售额度]' role='measure' type='quantitative'/>
+      <column datatype='string' name='[name_with_a_very_long_identifier_that_simulates_user_concatenation_of_concept_labels_for_dashboards]' role='dimension' type='nominal'/>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sheet'>
+      <table><view><datasources><datasource name='federated.unicode'/></datasources></view></table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Main'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Sheet' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

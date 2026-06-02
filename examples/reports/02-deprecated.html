@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>tabkit audit · deprecated.twb</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg: oklch(0.16 0.005 250);
+    --bg-card: oklch(0.20 0.006 250);
+    --bg-elevated: oklch(0.24 0.007 250);
+    --border: oklch(0.30 0.008 250);
+    --text: oklch(0.96 0.005 250);
+    --muted: oklch(0.65 0.01 250);
+    --brand: oklch(0.66 0.16 250);
+    --brand-dim: oklch(0.42 0.16 250);
+    --error: oklch(0.65 0.20 25);
+    --error-bg: oklch(0.30 0.10 25 / 0.25);
+    --warn: oklch(0.78 0.16 80);
+    --warn-bg: oklch(0.35 0.10 80 / 0.25);
+    --info: oklch(0.72 0.10 200);
+    --info-bg: oklch(0.32 0.08 200 / 0.25);
+    --ok: oklch(0.72 0.16 160);
+    --ok-bg: oklch(0.30 0.10 160 / 0.25);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+  }
+  main { max-width: 1100px; margin: 0 auto; padding: 48px 32px 96px; }
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 24px; margin-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-mark {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--brand), var(--brand-dim));
+    display: grid; place-items: center; color: white; font-weight: 800;
+    box-shadow: 0 6px 20px oklch(0.42 0.16 250 / 0.4);
+    font-size: 18px;
+  }
+  .brand-text h1 { font-size: 18px; margin: 0; letter-spacing: -0.01em; }
+  .brand-text small { color: var(--muted); font-size: 12px; }
+  .meta { color: var(--muted); font-size: 13px; text-align: right; }
+  .meta div + div { margin-top: 2px; }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 36px; }
+  .stat { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+  .stat .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .stat .value { font-size: 32px; font-weight: 700; margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .stat.error .value { color: var(--error); }
+  .stat.warn  .value { color: var(--warn); }
+  .stat.info  .value { color: var(--info); }
+
+  .workbook { margin-bottom: 40px; }
+  .workbook h2 {
+    font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--muted); margin: 0 0 12px; font-weight: 600;
+  }
+  .workbook .path {
+    font-family: ui-monospace, "JetBrains Mono", Consolas, monospace;
+    font-size: 13px; color: var(--text); background: var(--bg-card);
+    border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px;
+    word-break: break-all; margin-bottom: 16px;
+  }
+
+  .finding {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-left: 3px solid var(--border);
+    border-radius: 10px; padding: 16px 18px; margin-bottom: 10px;
+  }
+  .finding.error { border-left-color: var(--error); }
+  .finding.warn  { border-left-color: var(--warn); }
+  .finding.info  { border-left-color: var(--info); }
+
+  .finding-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+  .finding-id { font-family: ui-monospace, Consolas, monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
+  .finding-title { font-weight: 600; font-size: 14px; }
+  .severity-pill {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .severity-pill.error { background: var(--error-bg); color: var(--error); }
+  .severity-pill.warn  { background: var(--warn-bg); color: var(--warn); }
+  .severity-pill.info  { background: var(--info-bg); color: var(--info); }
+
+  .finding-msg { color: var(--text); font-size: 14px; margin-top: 8px; }
+  .finding-loc {
+    font-family: ui-monospace, Consolas, monospace; font-size: 12px; color: var(--muted);
+    background: var(--bg-elevated); padding: 4px 8px; border-radius: 6px; display: inline-block;
+    margin-top: 8px;
+  }
+  .finding-rem {
+    color: var(--muted); font-size: 13px; margin-top: 10px;
+    padding-left: 10px; border-left: 2px solid var(--border);
+  }
+  .empty-ok {
+    text-align: center; padding: 64px 32px;
+    background: var(--ok-bg); border: 1px solid oklch(0.55 0.16 160 / 0.4);
+    border-radius: 16px; color: var(--text);
+  }
+  .empty-ok .check {
+    width: 64px; height: 64px; border-radius: 50%; background: oklch(0.55 0.18 160);
+    margin: 0 auto 16px; display: grid; place-items: center; font-size: 28px; color: white;
+  }
+  .empty-ok h3 { margin: 0 0 8px; font-size: 18px; }
+  .empty-ok p { color: var(--muted); margin: 0; font-size: 14px; }
+
+  footer { color: var(--muted); font-size: 12px; margin-top: 64px; padding-top: 24px;
+           border-top: 1px solid var(--border); text-align: center; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="brand">
+      <div class="brand-mark">tk</div>
+      <div class="brand-text">
+        <h1>tabkit audit · deprecated.twb</h1>
+        <small>tabkit · static analysis for Tableau workbooks</small>
+      </div>
+    </div>
+    <div class="meta">
+      <div>tabkit v0.1.0</div>
+      <div>2026-05-21 01:10:28 UTC</div>
+    </div>
+  </header>
+
+  <section class="stats">
+    <div class="stat">
+      <div class="label">Findings</div>
+      <div class="value">3</div>
+    </div>
+    <div class="stat error">
+      <div class="label">Errors</div>
+      <div class="value">0</div>
+    </div>
+    <div class="stat warn">
+      <div class="label">Warnings</div>
+      <div class="value">3</div>
+    </div>
+    <div class="stat info">
+      <div class="label">Info</div>
+      <div class="value">0</div>
+    </div>
+  </section>
+
+  
+    
+      <section class="workbook">
+        <h2>Workbook</h2>
+        <div class="path">tests\fixtures\corpus\deprecated.twb</div>
+        
+          <div class="finding warn">
+            <div class="finding-head">
+              <div>
+                <div class="finding-id">AUD003</div>
+                <div class="finding-title">Deprecated function in calculated field</div>
+              </div>
+              <span class="severity-pill warn">warn</span>
+            </div>
+            <div class="finding-msg">Calculated field &#39;[variance]&#39; on &#39;federated.legacy&#39; uses deprecated function WINDOW_VAR().</div>
+            <div class="finding-loc">datasource:federated.legacy/field:[variance]</div>
+            <div class="finding-rem">Use VAR with LOD expressions for clarity.</div>
+          </div>
+        
+          <div class="finding warn">
+            <div class="finding-head">
+              <div>
+                <div class="finding-id">AUD003</div>
+                <div class="finding-title">Deprecated function in calculated field</div>
+              </div>
+              <span class="severity-pill warn">warn</span>
+            </div>
+            <div class="finding-msg">Calculated field &#39;[anchor]&#39; on &#39;federated.legacy&#39; uses deprecated function ATTR().</div>
+            <div class="finding-loc">datasource:federated.legacy/field:[anchor]</div>
+            <div class="finding-rem">Wrap explicit aggregations (MIN/MAX) when you need a single value per partition.</div>
+          </div>
+        
+          <div class="finding warn">
+            <div class="finding-head">
+              <div>
+                <div class="finding-id">AUD003</div>
+                <div class="finding-title">Deprecated function in calculated field</div>
+              </div>
+              <span class="severity-pill warn">warn</span>
+            </div>
+            <div class="finding-msg">Calculated field &#39;[anchor_avg]&#39; on &#39;federated.legacy&#39; uses deprecated function ATTR().</div>
+            <div class="finding-loc">datasource:federated.legacy/field:[anchor_avg]</div>
+            <div class="finding-rem">Wrap explicit aggregations (MIN/MAX) when you need a single value per partition.</div>
+          </div>
+        
+      </section>
+    
+  
+
+  <footer>
+    Generated by <strong>tabkit</strong> · single-file static report · no runtime
+  </footer>
+</main>
+</body>
+</html>

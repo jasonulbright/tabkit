@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!--
+  Fires GOV003 exactly once: '[ssn]' matches the ssn PII pattern.
+  No password, allowlisted-implicit (file-based) connection, no USERNAME() calc.
+-->
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <datasource caption='Users' name='federated.users' version='18.1'>
+      <connection class='excel-direct' filename='users.xlsx'/>
+      <column datatype='string' name='[ssn]' role='dimension' type='nominal'/>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sheet'>
+      <table><view><datasources><datasource name='federated.users'/></datasources></view></table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Main'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Sheet' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Tabkit.App/Tabkit.App.csproj" />
+    <Project Path="src/Tabkit.Cli/Tabkit.Cli.csproj" />
+    <Project Path="src/Tabkit.Core/Tabkit.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Tabkit.Tests/Tabkit.Tests.csproj" />
+  </Folder>
+</Solution>

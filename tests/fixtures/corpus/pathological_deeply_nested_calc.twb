@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!--
+  Pathological: deeply nested IIF / IF chain. Stresses the formula scanner.
+-->
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <datasource caption='Nested' name='federated.nested' version='18.1'>
+      <connection class='excel-direct' filename='nested.xlsx'/>
+      <column datatype='real' name='[x]' role='measure' type='quantitative'/>
+      <column datatype='string' name='[bucket]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='IIF([x] &lt; 1, "a", IIF([x] &lt; 2, "b", IIF([x] &lt; 4, "c", IIF([x] &lt; 8, "d", IIF([x] &lt; 16, "e", IIF([x] &lt; 32, "f", IIF([x] &lt; 64, "g", IIF([x] &lt; 128, "h", IIF([x] &lt; 256, "i", "j")))))))))'/>
+      </column>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sheet'>
+      <table><view><datasources><datasource name='federated.nested'/></datasources></view></table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Main'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Sheet' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

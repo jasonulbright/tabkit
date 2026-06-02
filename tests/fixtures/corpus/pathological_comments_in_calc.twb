@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!--
+  Pathological: a <calculation> element with both a formula= attribute
+  AND a child <!-/-/->XML comment<-/-/->. Loader must read the formula
+  attribute intact and tolerate the comment child (XmlReader is set to
+  IgnoreComments=false, so the comment becomes an XComment node, but
+  the data model only consumes the formula attribute).
+
+  Note: the inline marker above is intentionally not a real XML
+  comment delimiter — it documents that the embedded TEST comment
+  inside the calculation element below is the actual probe.
+-->
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <datasource caption='CommentsInCalc' name='federated.commentscalc' version='18.1'>
+      <connection class='excel-direct' filename='commentscalc.xlsx'/>
+      <column datatype='real' name='[x]' role='measure' type='quantitative'/>
+      <column datatype='real' name='[doubled]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[x] * 2'>
+          <!-- this comment lives inside the calculation element and must not affect formula extraction -->
+        </calculation>
+      </column>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sheet'>
+      <table><view><datasources><datasource name='federated.commentscalc'/></datasources></view></table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Main'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Sheet' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

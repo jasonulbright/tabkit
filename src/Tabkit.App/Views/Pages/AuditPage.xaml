@@ -1,0 +1,264 @@
+<Page
+    x:Class="Tabkit.App.Views.Pages.AuditPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:vm="clr-namespace:Tabkit.App.ViewModels.Pages"
+    xmlns:audit="clr-namespace:Tabkit.Core.Audit;assembly=Tabkit.Core"
+    xmlns:controls="clr-namespace:Tabkit.App.Views.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance vm:AuditViewModel}"
+    mc:Ignorable="d"
+    AllowDrop="True"
+    DragOver="OnDragOver"
+    Drop="OnDrop"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+
+    <Grid Margin="24,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Top bar: open + path + pack + recents + run + export -->
+        <ui:Card Grid.Row="0" Margin="0,0,0,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <ui:Button
+                    Grid.Column="0"
+                    Appearance="Primary"
+                    Icon="{ui:SymbolIcon Open24}"
+                    Content="Open workbook..."
+                    Visibility="{Binding IsVisibleOpenWorkbook, Converter={StaticResource BoolToVisibility}}"
+                    Command="{Binding OpenWorkbookCommand}" />
+
+                <ComboBox
+                    x:Name="RecentsCombo"
+                    Grid.Column="1"
+                    Margin="8,0,0,0"
+                    Width="42"
+                    ToolTip="Recent workbooks"
+                    ItemsSource="{Binding RecentWorkbooks}"
+                    SelectedIndex="-1"
+                    SelectionChanged="OnRecentSelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" FontFamily="Consolas" FontSize="11" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <TextBlock
+                    Grid.Column="2"
+                    Margin="12,0,12,0"
+                    VerticalAlignment="Center"
+                    Text="{Binding WorkbookPath}"
+                    TextTrimming="CharacterEllipsis"
+                    FontFamily="Consolas"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+                <ComboBox
+                    Grid.Column="3"
+                    Width="120"
+                    Margin="0,0,8,0"
+                    ItemsSource="{Binding Packs}"
+                    SelectedItem="{Binding Pack}" />
+
+                <ui:Button
+                    Grid.Column="4"
+                    Margin="0,0,8,0"
+                    Icon="{ui:SymbolIcon Play24}"
+                    Content="Re-run"
+                    Visibility="{Binding IsVisibleRunAudit, Converter={StaticResource BoolToVisibility}}"
+                    Command="{Binding RunAuditCommand}" />
+
+                <StackPanel
+                    Grid.Column="5"
+                    Orientation="Horizontal"
+                    Visibility="{Binding IsVisibleExport, Converter={StaticResource BoolToVisibility}}">
+                    <ui:Button
+                        Margin="0,0,4,0"
+                        Icon="{ui:SymbolIcon Code24}"
+                        Content="JSON"
+                        Command="{Binding ExportJsonCommand}" />
+                    <ui:Button
+                        Margin="0,0,4,0"
+                        Icon="{ui:SymbolIcon Shield24}"
+                        Content="SARIF"
+                        Command="{Binding ExportSarifCommand}" />
+                    <ui:Button
+                        Icon="{ui:SymbolIcon DocumentText24}"
+                        Content="HTML"
+                        Command="{Binding ExportHtmlCommand}" />
+                </StackPanel>
+            </Grid>
+        </ui:Card>
+
+        <!-- Counts + progress -->
+        <Grid Grid.Row="1" Margin="2,0,2,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Margin="0,0,16,0">
+                <Run Text="✗ " FontWeight="SemiBold" />
+                <Run Text="{Binding ErrorCount, Mode=OneWay}" />
+                <Run Text=" error" />
+            </TextBlock>
+            <TextBlock Grid.Column="1" Margin="0,0,16,0">
+                <Run Text="⚠ " FontWeight="SemiBold" />
+                <Run Text="{Binding WarnCount, Mode=OneWay}" />
+                <Run Text=" warn" />
+            </TextBlock>
+            <TextBlock Grid.Column="2" Margin="0,0,16,0">
+                <Run Text="ⓘ " FontWeight="SemiBold" />
+                <Run Text="{Binding InfoCount, Mode=OneWay}" />
+                <Run Text=" info" />
+            </TextBlock>
+            <TextBlock Grid.Column="3" Margin="0,0,16,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+                <Run Text="Showing: " />
+                <Run Text="{Binding VisibleCount, Mode=OneWay}" FontWeight="SemiBold" />
+            </TextBlock>
+        </Grid>
+
+        <!-- Filter bar -->
+        <Grid Grid.Row="2" Margin="2,0,2,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Column="0"
+                Margin="0,0,8,0"
+                VerticalAlignment="Center"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Text="Show:" />
+
+            <ToggleButton
+                Grid.Column="1"
+                Margin="0,0,4,0"
+                MinWidth="64"
+                IsChecked="{Binding ShowErrors}"
+                ToolTip="Toggle error findings">
+                <TextBlock>
+                    <Run Text="✗ " FontWeight="SemiBold" />
+                    <Run Text="error" />
+                </TextBlock>
+            </ToggleButton>
+            <ToggleButton
+                Grid.Column="2"
+                Margin="0,0,4,0"
+                MinWidth="64"
+                IsChecked="{Binding ShowWarns}"
+                ToolTip="Toggle warn findings">
+                <TextBlock>
+                    <Run Text="⚠ " FontWeight="SemiBold" />
+                    <Run Text="warn" />
+                </TextBlock>
+            </ToggleButton>
+            <ToggleButton
+                Grid.Column="3"
+                Margin="0,0,12,0"
+                MinWidth="64"
+                IsChecked="{Binding ShowInfo}"
+                ToolTip="Toggle info findings">
+                <TextBlock>
+                    <Run Text="ⓘ " FontWeight="SemiBold" />
+                    <Run Text="info" />
+                </TextBlock>
+            </ToggleButton>
+
+            <ui:TextBox
+                Grid.Column="4"
+                PlaceholderText="Filter findings (rule id, title, message, location)..."
+                Icon="{ui:SymbolIcon Filter24}"
+                Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}" />
+        </Grid>
+
+        <!-- Findings -->
+        <ui:Card Grid.Row="3">
+            <DataGrid
+                ItemsSource="{Binding FindingsView}"
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                IsReadOnly="True"
+                HeadersVisibility="Column"
+                GridLinesVisibility="None"
+                Background="Transparent"
+                RowBackground="Transparent"
+                AlternatingRowBackground="{DynamicResource ControlFillColorDefaultBrush}"
+                BorderThickness="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Header=""
+                        Width="36"
+                        Binding="{Binding Severity, Converter={StaticResource SeverityToGlyphConverter}}"
+                        FontSize="13"
+                        FontWeight="Bold" />
+                    <DataGridTextColumn
+                        Header="ID"
+                        Width="80"
+                        Binding="{Binding RuleId}"
+                        FontFamily="Consolas" />
+                    <DataGridTextColumn
+                        Header="Severity"
+                        Width="80"
+                        Binding="{Binding Severity}" />
+                    <DataGridTextColumn
+                        Header="Title"
+                        Width="220"
+                        Binding="{Binding Title}" />
+                    <DataGridTextColumn
+                        Header="Message"
+                        Width="*"
+                        Binding="{Binding Message}" />
+                    <DataGridTextColumn
+                        Header="Location"
+                        Width="180"
+                        Binding="{Binding Location}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </ui:Card>
+
+        <!-- Status bar -->
+        <Border
+            Grid.Row="4"
+            Margin="0,12,0,0"
+            Padding="12,8"
+            CornerRadius="4"
+            Background="{DynamicResource ControlFillColorSecondaryBrush}">
+            <TextBlock
+                Text="{Binding StatusMessage}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+        </Border>
+
+        <!-- Brand async progress overlay (covers content + status during long ops) -->
+        <controls:BusyOverlay
+            Grid.Row="0"
+            Grid.RowSpan="5"
+            IsBusy="{Binding IsRunning}"
+            Title="Running audit..."
+            Step="{Binding StatusMessage}" />
+    </Grid>
+</Page>

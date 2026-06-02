@@ -1,0 +1,31 @@
+# Example 3: Read a Parquet table from the data lake, fan out to Hyper for
+# Tableau consumers AND keep a Parquet copy for downstream analytics tooling.
+#
+# Use case: one canonical extract definition, two consumer surfaces, no
+# Prep Conductor schedule duplication.
+#
+# Run with: tabkit extract run examples/pipelines/03-parquet-warehouse-fanout.yml
+# (then re-run with a different sink path to write the second copy)
+
+name: warehouse_orders_to_hyper
+
+source:
+  type: parquet
+  path: //warehouse/curated/orders_v2.parquet
+
+transforms:
+  - type: drop
+    columns: [_pipeline_run_id, _ingested_at, _raw_payload]
+  - type: cast
+    columns:
+      order_id: string  # Tableau's string-ID UX > int IDs for joins
+      order_date: datetime
+  - type: filter
+    where:
+      - { col: order_total, op: ">", value: 0 }
+
+sink:
+  type: hyper
+  path: ./out/warehouse_orders.hyper
+  table: orders
+  mode: replace

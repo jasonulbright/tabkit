@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!--
+  Pathological: byte-encoding probe (UTF-8, no BOM).
+  Sister fixtures pathological_bom_utf8.twb (UTF-8 + BOM) and
+  pathological_utf16le.twb (UTF-16 LE + BOM) carry the same logical
+  workbook structure. Loader must produce equivalent Workbook records
+  across all three byte encodings.
+-->
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <datasource caption='Encoding probe' name='federated.encoding' version='18.1'>
+      <connection class='excel-direct' filename='probe.xlsx'/>
+      <column datatype='string' name='[label]' role='dimension' type='nominal'/>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sheet'>
+      <table><view><datasources><datasource name='federated.encoding'/></datasources></view></table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Main'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Sheet' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

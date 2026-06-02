@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!--
+  Pathological: workbook with namespace-prefixed elements. Real Tableau
+  XML does not use prefixes, but the loader must tolerate them because
+  third-party tools and XSLT transforms sometimes inject them. Loader
+  uses LocalName-based matching (XElementLocalNameExtensions) so all
+  children must be found despite the 't:' prefix.
+-->
+<t:workbook xmlns:t='http://tableau.com/probe' source-build='2024.3.0' source-platform='win' version='18.1'>
+  <t:datasources>
+    <t:datasource caption='Prefixed' name='federated.prefixed' version='18.1'>
+      <t:connection class='excel-direct' filename='prefixed.xlsx'/>
+      <t:column datatype='string' name='[id]' role='dimension' type='nominal'/>
+      <t:column datatype='real' name='[value]' role='measure' type='quantitative'>
+        <t:calculation class='tableau' formula='[id] * 1'/>
+      </t:column>
+    </t:datasource>
+  </t:datasources>
+  <t:worksheets>
+    <t:worksheet name='Sheet'>
+      <t:table><t:view><t:datasources><t:datasource name='federated.prefixed'/></t:datasources></t:view></t:table>
+    </t:worksheet>
+  </t:worksheets>
+  <t:dashboards>
+    <t:dashboard name='Main'>
+      <t:zones>
+        <t:zone id='1' type='layout-basic'>
+          <t:zone id='2' name='Sheet' type='worksheet'/>
+        </t:zone>
+      </t:zones>
+    </t:dashboard>
+  </t:dashboards>
+</t:workbook>

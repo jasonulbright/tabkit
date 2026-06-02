@@ -1,0 +1,40 @@
+# Example 2: Pull a date-windowed slice from SQL Server, reshape, write Hyper.
+#
+# Common pattern: a nightly refresh of "last 13 months of orders" for a
+# Tableau dashboard. The connection string lives in an env var so the YAML
+# can ship to git without credentials.
+#
+# Run with:
+#   $env:ORDERS_DB = "mssql://user:pass@server/Orders"
+#   tabkit extract run examples/pipelines/02-mssql-incremental-to-hyper.yml
+
+name: orders_last_13mo
+
+source:
+  type: mssql
+  connection_string_env: ORDERS_DB
+  query: |
+    SELECT
+        o.order_id,
+        o.customer_id,
+        c.region,
+        o.total_amount,
+        o.order_date,
+        o.fulfillment_status
+    FROM dbo.orders        AS o
+    INNER JOIN dbo.customers AS c ON c.customer_id = o.customer_id
+    WHERE o.order_date >= DATEADD(month, -13, GETDATE())
+      AND o.fulfillment_status <> 'cancelled'
+
+transforms:
+  - type: rename
+    columns:
+      total_amount: total
+  - type: select
+    columns: [order_id, customer_id, region, total, order_date, fulfillment_status]
+
+sink:
+  type: hyper
+  path: //fileserver/tableau/extracts/orders_last_13mo.hyper
+  table: orders
+  mode: replace

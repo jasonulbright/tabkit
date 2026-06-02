@@ -1,0 +1,268 @@
+<Page
+    x:Class="Tabkit.App.Views.Pages.InventoryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:vm="clr-namespace:Tabkit.App.ViewModels.Pages"
+    xmlns:controls="clr-namespace:Tabkit.App.Views.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance vm:InventoryViewModel}"
+    mc:Ignorable="d"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+
+    <Grid Margin="24,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Database bar -->
+        <ui:Card Grid.Row="0" Margin="0,0,0,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock
+                    Grid.Column="0"
+                    Margin="0,0,8,0"
+                    VerticalAlignment="Center"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="DB:" />
+
+                <TextBox
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    FontFamily="Consolas"
+                    Text="{Binding DatabasePath, UpdateSourceTrigger=PropertyChanged}" />
+
+                <ui:Button
+                    Grid.Column="2"
+                    Margin="8,0,0,0"
+                    Icon="{ui:SymbolIcon FolderOpen24}"
+                    Content="Pick..."
+                    Visibility="{Binding IsVisibleDbControls, Converter={StaticResource BoolToVisibility}}"
+                    Command="{Binding PickDatabaseCommand}" />
+
+                <ui:Button
+                    Grid.Column="3"
+                    Margin="8,0,0,0"
+                    Appearance="Primary"
+                    Icon="{ui:SymbolIcon Database24}"
+                    Content="Open / Create"
+                    Visibility="{Binding IsVisibleDbControls, Converter={StaticResource BoolToVisibility}}"
+                    Command="{Binding OpenDatabaseCommand}" />
+            </Grid>
+        </ui:Card>
+
+        <!-- Scan bar -->
+        <ui:Card Grid.Row="1" Margin="0,0,0,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock
+                    Grid.Column="0"
+                    Margin="0,0,8,0"
+                    VerticalAlignment="Center"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="Scan:" />
+
+                <TextBox
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    FontFamily="Consolas"
+                    Text="{Binding ScanRoot, UpdateSourceTrigger=PropertyChanged}" />
+
+                <ui:Button
+                    Grid.Column="2"
+                    Margin="8,0,0,0"
+                    Icon="{ui:SymbolIcon FolderOpen24}"
+                    Content="Pick..."
+                    Command="{Binding PickScanRootCommand}" />
+
+                <ui:Button
+                    Grid.Column="3"
+                    Margin="8,0,0,0"
+                    Appearance="Primary"
+                    Icon="{ui:SymbolIcon Play24}"
+                    Content="Scan"
+                    Visibility="{Binding IsVisibleScan, Converter={StaticResource BoolToVisibility}}"
+                    Command="{Binding ScanCommand}" />
+
+                <!--
+                    Cancel stays visible-but-disabled (CanCancelScan gates IsEnabled) per
+                    WPF-UI Gallery operation-control convention. Hiding leaves the user
+                    without visual confirmation that a stop control exists.
+                -->
+                <ui:Button
+                    Grid.Column="4"
+                    Margin="8,0,0,0"
+                    Icon="{ui:SymbolIcon Dismiss24}"
+                    Content="Cancel"
+                    Command="{Binding CancelScanCommand}" />
+            </Grid>
+        </ui:Card>
+
+        <!-- Stats + progress -->
+        <Grid Grid.Row="2" Margin="2,0,2,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Margin="0,0,18,0">
+                <Run Text="{Binding StatWorkbooks, Mode=OneWay}" FontWeight="SemiBold" />
+                <Run Text=" workbooks" />
+            </TextBlock>
+            <TextBlock Grid.Column="1" Margin="0,0,18,0">
+                <Run Text="{Binding StatDatasources, Mode=OneWay}" FontWeight="SemiBold" />
+                <Run Text=" datasources" />
+            </TextBlock>
+            <TextBlock Grid.Column="2" Margin="0,0,18,0">
+                <Run Text="{Binding StatConnections, Mode=OneWay}" FontWeight="SemiBold" />
+                <Run Text=" connections" />
+            </TextBlock>
+            <TextBlock Grid.Column="3" Margin="0,0,18,0">
+                <Run Text="{Binding StatFields, Mode=OneWay}" FontWeight="SemiBold" />
+                <Run Text=" fields" />
+            </TextBlock>
+            <TextBlock Grid.Column="4" Margin="0,0,18,0">
+                <Run Text="⚠ " FontWeight="SemiBold" />
+                <Run Text="{Binding StatWithEmbeddedCreds, Mode=OneWay}" FontWeight="SemiBold" />
+                <Run Text=" with embedded creds" />
+            </TextBlock>
+            <TextBlock
+                Grid.Column="5"
+                VerticalAlignment="Center"
+                TextTrimming="CharacterEllipsis"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                FontFamily="Consolas"
+                FontSize="11"
+                Text="{Binding CurrentScanPath}" />
+        </Grid>
+
+        <!-- Query bar -->
+        <ui:Card Grid.Row="3" Margin="0,0,0,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock
+                    Grid.Column="0"
+                    Margin="0,0,8,0"
+                    VerticalAlignment="Center"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="Query:" />
+
+                <ComboBox
+                    Grid.Column="1"
+                    Width="200"
+                    VerticalAlignment="Center"
+                    ItemsSource="{Binding QueryModes}"
+                    SelectedItem="{Binding QueryMode}" />
+
+                <TextBlock
+                    Grid.Column="2"
+                    Margin="16,0,8,0"
+                    VerticalAlignment="Center"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="Table:" />
+
+                <TextBox
+                    Grid.Column="3"
+                    VerticalAlignment="Center"
+                    IsEnabled="{Binding TableSearchEnabled}"
+                    FontFamily="Consolas"
+                    Text="{Binding TableSearch, UpdateSourceTrigger=PropertyChanged}" />
+
+                <ui:Button
+                    Grid.Column="4"
+                    Margin="8,0,0,0"
+                    Appearance="Primary"
+                    Icon="{ui:SymbolIcon Search24}"
+                    Content="Run"
+                    Visibility="{Binding IsVisibleRunQuery, Converter={StaticResource BoolToVisibility}}"
+                    Command="{Binding RunQueryCommand}" />
+
+                <ui:Button
+                    Grid.Column="5"
+                    Margin="8,0,0,0"
+                    Icon="{ui:SymbolIcon Save24}"
+                    Content="Export CSV"
+                    Command="{Binding ExportCsvCommand}" />
+            </Grid>
+        </ui:Card>
+
+        <!-- Filter strip (operates on the current query results) -->
+        <ui:TextBox
+            Grid.Row="4"
+            Margin="0,0,0,8"
+            PlaceholderText="Filter visible results across all columns..."
+            Icon="{ui:SymbolIcon Filter24}"
+            Text="{Binding ResultFilter, UpdateSourceTrigger=PropertyChanged}" />
+
+        <!-- Results -->
+        <ui:Card Grid.Row="5">
+            <DataGrid
+                ItemsSource="{Binding Results}"
+                AutoGenerateColumns="True"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                CanUserReorderColumns="True"
+                CanUserResizeColumns="True"
+                CanUserSortColumns="True"
+                IsReadOnly="True"
+                HeadersVisibility="Column"
+                GridLinesVisibility="None"
+                Background="Transparent"
+                RowBackground="Transparent"
+                AlternatingRowBackground="{DynamicResource ControlFillColorDefaultBrush}"
+                BorderThickness="0" />
+        </ui:Card>
+
+        <!-- Status bar -->
+        <Border
+            Grid.Row="6"
+            Margin="0,8,0,0"
+            Padding="12,8"
+            CornerRadius="4"
+            Background="{DynamicResource ControlFillColorSecondaryBrush}">
+            <TextBlock
+                Text="{Binding StatusMessage}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+        </Border>
+
+        <!-- Brand async progress overlay (covers content during scans) -->
+        <controls:BusyOverlay
+            Grid.Row="0"
+            Grid.RowSpan="7"
+            IsBusy="{Binding IsScanning}"
+            Title="Scanning workbooks..."
+            Step="{Binding CurrentScanPath}" />
+    </Grid>
+</Page>

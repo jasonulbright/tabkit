@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <datasource caption='KPIs' name='federated.kpis' version='18.1'>
+      <connection class='excel-direct' filename='kpis.xlsx'/>
+      <column datatype='string' name='[metric]' role='dimension' type='nominal'/>
+      <column datatype='real' name='[value]' role='measure' type='quantitative'/>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Revenue Tile'>
+      <table><view><datasources><datasource name='federated.kpis'/></datasources></view></table>
+    </worksheet>
+    <worksheet name='Cost Tile'>
+      <table><view><datasources><datasource name='federated.kpis'/></datasources></view></table>
+    </worksheet>
+    <worksheet name='Margin Tile'>
+      <table><view><datasources><datasource name='federated.kpis'/></datasources></view></table>
+    </worksheet>
+    <worksheet name='Active Users Tile'>
+      <table><view><datasources><datasource name='federated.kpis'/></datasources></view></table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Executive KPI'>
+      <zones>
+        <zone id='1' type='layout-flow'>
+          <zone id='2' type='layout-flow'>
+            <zone id='3' type='layout-basic'>
+              <zone id='4' name='Revenue Tile' type='worksheet'/>
+              <zone id='5' name='Cost Tile' type='worksheet'/>
+            </zone>
+            <zone id='6' type='layout-basic'>
+              <zone id='7' name='Margin Tile' type='worksheet'/>
+              <zone id='8' name='Active Users Tile' type='worksheet'/>
+            </zone>
+          </zone>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

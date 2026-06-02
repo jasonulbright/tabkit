@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "dgSpecHash": "wFTykDymFlg=",
+  "success": true,
+  "projectFilePath": "C:\\projects\\tabkit\\src\\Tabkit.Core\\Tabkit.Core.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jason\\.nuget\\packages\\apache.arrow\\18.0.0\\apache.arrow.18.0.0.nupkg.sha512",
+    "C:\\Users\\jason\\.nuget\\packages\\csvhelper\\33.1.0\\csvhelper.33.1.0.nupkg.sha512",
+    "C:\\Users\\jason\\.nuget\\packages\\diffplex\\1.9.0\\diffplex.1.9.0.nupkg.sha512",
+    "C:\\Users\\jason\\.nuget\\packages\\microsoft.data.sqlite\\10.0.8\\microsoft.data.sqlite.10.0.8.nupkg.sha512",
+    "C:\\Users\\jason\\.nuget\\packages\\microsoft.data.sqlite.core\\10.0.8\\microsoft.data.sqlite.core.10.0.8.nupkg.sha512",
+    "C:\\Users\\jason\\.nuget\\packages\\parquetsharp\\23.0.0.2\\parquetsharp.23.0.0.2.nupkg.sha512",
+    "C:\\Users\\jason\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.1.11\\sqlitepclraw.bundle_e_sqlite3.2.1.11.nupkg.sha512",
+    "C:\\Users\\jason\\.nuget\\packages\\sqlitepclraw.core\\2.1.11\\sqlitepclraw.core.2.1.11.nupkg.sha512",
+    "C:\\Users\\jason\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.11\\sqlitepclraw.lib.e_sqlite3.2.1.11.nupkg.sha512",
+    "C:\\Users\\jason\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3\\2.1.11\\sqlitepclraw.provider.e_sqlite3.2.1.11.nupkg.sha512",
+    "C:\\Users\\jason\\.nuget\\packages\\tableau.hyperapi.net\\0.0.17971\\tableau.hyperapi.net.0.0.17971.nupkg.sha512",
+    "C:\\Users\\jason\\.nuget\\packages\\tableau.hyperapi.net.linux-x64\\0.0.17971\\tableau.hyperapi.net.linux-x64.0.0.17971.nupkg.sha512",
+    "C:\\Users\\jason\\.nuget\\packages\\tableau.hyperapi.net.osx-x64\\0.0.17971\\tableau.hyperapi.net.osx-x64.0.0.17971.nupkg.sha512",
+    "C:\\Users\\jason\\.nuget\\packages\\tableau.hyperapi.net.win-x64\\0.0.17971\\tableau.hyperapi.net.win-x64.0.0.17971.nupkg.sha512",
+    "C:\\Users\\jason\\.nuget\\packages\\yamldotnet\\17.1.0\\yamldotnet.17.1.0.nupkg.sha512"
+  ],
+  "logs": []
+}

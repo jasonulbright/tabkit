@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<workbook source-build='2024.3.0' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <datasources>
+    <datasource caption='Sample Orders' name='federated.sample_orders' version='18.1'>
+      <connection class='excel-direct' filename='sample_orders.xlsx' validate='no'/>
+      <column datatype='integer' name='[order_id]' role='dimension' type='ordinal' caption='Order ID'/>
+      <column datatype='string' name='[customer_email]' role='dimension' type='nominal' caption='Customer Email'/>
+      <column datatype='real' name='[total]' role='measure' type='quantitative' caption='Total'/>
+      <column datatype='real' name='[total_with_tax]' role='measure' type='quantitative' caption='Total With Tax'>
+        <calculation class='tableau' formula='[total] * 1.08'/>
+      </column>
+      <column datatype='string' name='[locked_to_user]' role='dimension' type='nominal' caption='Locked To User'>
+        <calculation class='tableau' formula='IF USERNAME() = &quot;admin&quot; THEN [customer_email] ELSE NULL END'/>
+      </column>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sales by Order'>
+      <table>
+        <view>
+          <datasources>
+            <datasource name='federated.sample_orders'/>
+          </datasources>
+        </view>
+      </table>
+    </worksheet>
+    <worksheet name='Unused Scratch Sheet'>
+      <table>
+        <view>
+          <datasources>
+            <datasource name='federated.sample_orders'/>
+          </datasources>
+        </view>
+      </table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Overview'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Sales by Order' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

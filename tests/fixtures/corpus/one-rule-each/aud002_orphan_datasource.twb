@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!--
+  Fires AUD002 exactly once: 'federated.orphan' has no worksheet reference.
+-->
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <datasource caption='Orders' name='federated.orders' version='18.1'>
+      <connection class='excel-direct' filename='orders.xlsx'/>
+      <column datatype='integer' name='[order_id]' role='dimension' type='ordinal'/>
+    </datasource>
+    <datasource caption='Orphan' name='federated.orphan' version='18.1'>
+      <connection class='excel-direct' filename='orphan.xlsx'/>
+      <column datatype='integer' name='[id]' role='dimension' type='ordinal'/>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Orders Overview'>
+      <table><view><datasources><datasource name='federated.orders'/></datasources></view></table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Main'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Orders Overview' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

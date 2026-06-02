@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <datasource caption='Legacy Calcs' name='federated.legacy' version='18.1'>
+      <connection class='excel-direct' filename='legacy.xlsx'/>
+      <column datatype='integer' name='[id]' role='dimension' type='ordinal'/>
+      <column datatype='real' name='[revenue]' role='measure' type='quantitative'/>
+      <column datatype='real' name='[variance]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='WINDOW_VAR([revenue])'/>
+      </column>
+      <column datatype='real' name='[anchor]' role='dimension' type='ordinal'>
+        <calculation class='tableau' formula='ATTR([id])'/>
+      </column>
+      <column datatype='real' name='[anchor_avg]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='ATTR([revenue]) / 2'/>
+      </column>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Legacy View'>
+      <table>
+        <view>
+          <datasources>
+            <datasource name='federated.legacy'/>
+          </datasources>
+        </view>
+      </table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Legacy'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Legacy View' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!--
+  Fires AUD005 exactly once: calc references [missing_col] which is not
+  defined on the datasource.
+-->
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <datasource caption='Orders' name='federated.orders' version='18.1'>
+      <connection class='excel-direct' filename='orders.xlsx'/>
+      <column datatype='real' name='[amount]' role='measure' type='quantitative'/>
+      <column datatype='real' name='[total]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[amount] + [missing_col]'/>
+      </column>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sheet'>
+      <table><view><datasources><datasource name='federated.orders'/></datasources></view></table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Main'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Sheet' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

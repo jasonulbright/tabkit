@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!--
+  Fires AUD004 exactly once: identical calc 'IIF([amount] > 0, 1, 0)' appears
+  in two different datasources. Both datasources are referenced and on a
+  dashboard so AUD001/AUD002 don't misfire.
+-->
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <datasource caption='Sales' name='federated.sales' version='18.1'>
+      <connection class='excel-direct' filename='sales.xlsx'/>
+      <column datatype='real' name='[amount]' role='measure' type='quantitative'/>
+      <column datatype='integer' name='[is_positive]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='IIF([amount] &gt; 0, 1, 0)'/>
+      </column>
+    </datasource>
+    <datasource caption='Returns' name='federated.returns' version='18.1'>
+      <connection class='excel-direct' filename='returns.xlsx'/>
+      <column datatype='real' name='[amount]' role='measure' type='quantitative'/>
+      <column datatype='integer' name='[is_positive]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='IIF([amount] &gt; 0, 1, 0)'/>
+      </column>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sales Sheet'>
+      <table><view><datasources><datasource name='federated.sales'/></datasources></view></table>
+    </worksheet>
+    <worksheet name='Returns Sheet'>
+      <table><view><datasources><datasource name='federated.returns'/></datasources></view></table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Main'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Sales Sheet' type='worksheet'/>
+          <zone id='3' name='Returns Sheet' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

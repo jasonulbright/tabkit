@@ -1,0 +1,64 @@
+<ui:FluentWindow
+    x:Class="Tabkit.App.Views.Windows.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:pages="clr-namespace:Tabkit.App.Views.Pages"
+    Title="Tabkit"
+    Width="1100"
+    Height="720"
+    MinWidth="900"
+    MinHeight="560"
+    WindowStartupLocation="CenterScreen"
+    ExtendsContentIntoTitleBar="True"
+    WindowBackdropType="Mica">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="Tabkit" />
+
+        <ui:NavigationView
+            x:Name="NavigationView"
+            Grid.Row="1"
+            PaneDisplayMode="LeftFluent"
+            IsBackButtonVisible="Collapsed">
+
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem
+                    Content="Audit"
+                    Icon="{ui:SymbolIcon ShieldCheckmark24}"
+                    TargetPageType="{x:Type pages:AuditPage}" />
+                <ui:NavigationViewItem
+                    Content="Inventory"
+                    Icon="{ui:SymbolIcon DatabaseSearch24}"
+                    TargetPageType="{x:Type pages:InventoryPage}" />
+                <ui:NavigationViewItem
+                    Content="Extract"
+                    Icon="{ui:SymbolIcon ArrowExportLtr24}"
+                    TargetPageType="{x:Type pages:ExtractPage}" />
+            </ui:NavigationView.MenuItems>
+
+            <ui:NavigationView.FooterMenuItems>
+                <ui:NavigationViewItem
+                    Content="Settings"
+                    Icon="{ui:SymbolIcon Settings24}"
+                    TargetPageType="{x:Type pages:SettingsPage}" />
+            </ui:NavigationView.FooterMenuItems>
+
+        </ui:NavigationView>
+
+        <ui:SnackbarPresenter
+            x:Name="SnackbarPresenter"
+            Grid.Row="1"
+            VerticalAlignment="Bottom"
+            Margin="0,0,0,8" />
+        <ui:ContentDialogHost
+            x:Name="RootContentDialog"
+            Grid.Row="0"
+            Grid.RowSpan="2" />
+    </Grid>
+</ui:FluentWindow>

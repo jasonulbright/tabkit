@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Stub schema for the Tableau "user" namespace
+  (http://www.tableausoftware.com/xml/user).
+
+  Tableau's public tableau-document-schemas repo imports this namespace from
+  twb_2026.1.0.xsd but does NOT publish a corresponding schema document. This
+  stub defines the imported types (currently just UserAttributes-AG) as
+  permissive — accepting any attributes — so the TWB XSD will compile under
+  .NET's strict XmlSchemaSet validator.
+
+  The cost: attributes inside the user namespace pass through unvalidated.
+  That's acceptable because:
+    (a) Tableau themselves don't ship a stricter definition,
+    (b) the user namespace appears to carry row-level user-identity hints
+        whose values are environment-specific anyway,
+    (c) our governance rules (GOV004 USERNAME-based RLS) operate on calc
+        formula text, not user-namespace attributes, so we don't depend on
+        the strictness here.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.tableausoftware.com/xml/user"
+           elementFormDefault="qualified">
+
+  <xs:attributeGroup name="UserAttributes-AG">
+    <xs:anyAttribute namespace="##any" processContents="lax"/>
+  </xs:attributeGroup>
+
+</xs:schema>

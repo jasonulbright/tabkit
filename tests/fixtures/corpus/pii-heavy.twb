@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <datasource caption='Patient Records' name='federated.patients' version='18.1'>
+      <connection class='sqlserver' server='ehr-prod.medco.example' dbname='EHR' username='svc_tableau' password='REDACTED'/>
+      <column datatype='integer' name='[patient_id]' role='dimension' type='ordinal'/>
+      <column datatype='string' name='[social_security_number]' role='dimension' type='nominal' caption='SSN'/>
+      <column datatype='date' name='[date_of_birth]' role='dimension' type='ordinal'/>
+      <column datatype='string' name='[email]' role='dimension' type='nominal'/>
+      <column datatype='string' name='[phone_number]' role='dimension' type='nominal'/>
+      <column datatype='string' name='[mrn]' role='dimension' type='nominal' caption='Medical Record Number'/>
+      <column datatype='string' name='[diagnosis_code]' role='dimension' type='nominal'/>
+      <column datatype='string' name='[home_address]' role='dimension' type='nominal'/>
+      <column datatype='string' name='[restricted_view]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='IF USERNAME() = &quot;doctor&quot; THEN [diagnosis_code] ELSE "***" END'/>
+      </column>
+    </datasource>
+    <datasource caption='Local Extract' name='federated.scratch' version='18.1'>
+      <connection class='textscan' filename='C:\Users\jdoe\Documents\patient_export.csv'/>
+      <column datatype='string' name='[col1]' role='dimension' type='nominal'/>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Patient Demographics'>
+      <table><view><datasources><datasource name='federated.patients'/></datasources></view></table>
+    </worksheet>
+    <worksheet name='Local Workspace'>
+      <table><view><datasources><datasource name='federated.scratch'/></datasources></view></table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Demographics'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Patient Demographics' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

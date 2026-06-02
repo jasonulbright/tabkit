@@ -1,0 +1,209 @@
+<Page
+    x:Class="Tabkit.App.Views.Pages.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:vm="clr-namespace:Tabkit.App.ViewModels.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance vm:SettingsViewModel}"
+    mc:Ignorable="d"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24,16">
+        <StackPanel MaxWidth="900" HorizontalAlignment="Stretch">
+
+            <!-- Header + actions -->
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Settings" FontSize="18" FontWeight="SemiBold" />
+                    <TextBlock
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        FontFamily="Consolas"
+                        FontSize="11"
+                        Text="{Binding SettingsPath}" />
+                </StackPanel>
+                <ui:Button
+                    Grid.Column="1"
+                    Margin="8,0,0,0"
+                    Icon="{ui:SymbolIcon ArrowCounterclockwise24}"
+                    Content="Reset"
+                    Command="{Binding ResetToDefaultsCommand}" />
+                <ui:Button
+                    Grid.Column="2"
+                    Margin="8,0,0,0"
+                    Icon="{ui:SymbolIcon ArrowSync24}"
+                    Content="Reload"
+                    Command="{Binding ReloadCommand}" />
+                <ui:Button
+                    Grid.Column="3"
+                    Margin="8,0,0,0"
+                    Appearance="Primary"
+                    Icon="{ui:SymbolIcon Save24}"
+                    Content="Save"
+                    Visibility="{Binding IsVisibleSave, Converter={StaticResource BoolToVisibility}}"
+                    Command="{Binding SaveCommand}" />
+            </Grid>
+
+            <!-- Appearance -->
+            <ui:Card Margin="0,8,0,0">
+                <StackPanel>
+                    <TextBlock Text="Appearance" FontWeight="Bold" FontSize="13" Margin="0,0,0,8" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Theme" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <ComboBox
+                            Grid.Column="1"
+                            Width="160"
+                            HorizontalAlignment="Left"
+                            ItemsSource="{Binding Themes}"
+                            SelectedItem="{Binding Theme}" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <!-- Default paths -->
+            <ui:Card Margin="0,8,0,0">
+                <StackPanel>
+                    <TextBlock Text="Default paths" FontWeight="Bold" FontSize="13" Margin="0,0,0,8" />
+                    <TextBlock
+                        Margin="0,0,0,12"
+                        TextWrapping="Wrap"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="Empty fields fall back to per-operation prompts and tool-specific defaults." />
+
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Audit export dir" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBox Grid.Column="1" FontFamily="Consolas"
+                                 Text="{Binding AuditOutputDir, UpdateSourceTrigger=PropertyChanged}" />
+                        <ui:Button Grid.Column="2" Margin="8,0,0,0"
+                                   Icon="{ui:SymbolIcon FolderOpen24}"
+                                   Content="Pick..."
+                                   Command="{Binding PickAuditOutputDirCommand}" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Extract sink dir" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBox Grid.Column="1" FontFamily="Consolas"
+                                 Text="{Binding ExtractOutputDir, UpdateSourceTrigger=PropertyChanged}" />
+                        <ui:Button Grid.Column="2" Margin="8,0,0,0"
+                                   Icon="{ui:SymbolIcon FolderOpen24}"
+                                   Content="Pick..."
+                                   Command="{Binding PickExtractOutputDirCommand}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Inventory DB" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBox Grid.Column="1" FontFamily="Consolas"
+                                 Text="{Binding InventoryDbPath, UpdateSourceTrigger=PropertyChanged}" />
+                        <ui:Button Grid.Column="2" Margin="8,0,0,0"
+                                   Icon="{ui:SymbolIcon Database24}"
+                                   Content="Pick..."
+                                   Command="{Binding PickInventoryDbCommand}" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <!-- GOV002 allowlist -->
+            <ui:Card Margin="0,8,0,0">
+                <StackPanel>
+                    <TextBlock Text="GOV002 - additional approved servers"
+                               FontWeight="Bold" FontSize="13" Margin="0,0,0,4" />
+                    <TextBlock
+                        Margin="0,0,0,8"
+                        TextWrapping="Wrap"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="One hostname per line. Case-insensitive exact match. Adds to the built-in defaults (localhost, 127.0.0.1, internal.example.com)." />
+                    <TextBox
+                        MinHeight="120"
+                        AcceptsReturn="True"
+                        FontFamily="Consolas"
+                        VerticalScrollBarVisibility="Auto"
+                        Text="{Binding Gov002AllowedServersText, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </ui:Card>
+
+            <!-- GOV003 PII pattern toggles -->
+            <ui:Card Margin="0,8,0,16">
+                <StackPanel>
+                    <TextBlock Text="GOV003 - PII patterns"
+                               FontWeight="Bold" FontSize="13" Margin="0,0,0,4" />
+                    <TextBlock
+                        Margin="0,0,0,8"
+                        TextWrapping="Wrap"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="Uncheck a pattern to skip it. Useful when an org legitimately uses a flagged term (e.g. 'mrn' as Material Reference Number, not Medical Record Number)." />
+                    <ItemsControl ItemsSource="{Binding PiiPatterns}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox
+                                    Margin="0,4,16,4"
+                                    Content="{Binding Label}"
+                                    IsChecked="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}"
+                                    FontFamily="Consolas" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ui:Card>
+
+            <!-- Status -->
+            <Border
+                Margin="0,8,0,0"
+                Padding="12,8"
+                CornerRadius="4"
+                Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        Text="{Binding StatusMessage}"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock
+                        Grid.Column="1"
+                        FontWeight="SemiBold"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Visibility="{Binding IsDirty, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed}"
+                        Text="• unsaved changes" />
+                </Grid>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

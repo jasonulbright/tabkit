@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!--
+  Fires GOV004 exactly once: calc uses USERNAME() for ad-hoc row-level
+  security. Calc references only existing columns so AUD005 stays quiet.
+-->
+<workbook source-build='2024.3.0' source-platform='win' version='18.1'>
+  <datasources>
+    <datasource caption='Records' name='federated.records' version='18.1'>
+      <connection class='excel-direct' filename='records.xlsx'/>
+      <column datatype='string' name='[detail]' role='dimension' type='nominal'/>
+      <column datatype='string' name='[restricted_detail]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='IF USERNAME() = "admin" THEN [detail] ELSE "***" END'/>
+      </column>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sheet'>
+      <table><view><datasources><datasource name='federated.records'/></datasources></view></table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Main'>
+      <zones>
+        <zone id='1' type='layout-basic'>
+          <zone id='2' name='Sheet' type='worksheet'/>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>
