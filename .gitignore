@@ -1,13 +1,23 @@
-/src/Tabkit.App/bin/Debug
-/src/Tabkit.App/bin/Release
-/src/Tabkit.App/obj/Debug
-/src/Tabkit.App/obj/Release
-/src/Tabkit.Cli/bin/Debug
-/src/Tabkit.Cli/bin/Release
-/src/Tabkit.Core/obj/Debug
-/src/Tabkit.Core/obj/Release
-/tests/Tabkit.Tests/bin/Debug
-/tests/Tabkit.Tests/bin/Release
-/tests/Tabkit.Tests/obj/Debug
-/tests/Tabkit.Tests/obj/Release
-/src/Tabkit.Cli/obj
+# Build output
+[Bb]in/
+[Oo]bj/
+# .NET / Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+# Build & test results
+[Dd]ebug/
+[Rr]elease/
+[Tt]est[Rr]esult*/
+artifacts/
+# Rider / VS Code (optional — keep .vscode if you commit shared settings)
+.idea/
+# NuGet
+*.nupkg
+packages/
+.nuget/
+# OS cruft
+Thumbs.db
+.DS_Store
