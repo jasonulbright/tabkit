@@ -21,3 +21,6 @@ packages/
 # OS cruft
 Thumbs.db
 .DS_Store
+# External test corpus — fetched on demand, see tests/fixtures/external/ATTRIBUTION.md
+/tests/fixtures/external/book/
+/tests/fixtures/external/server-client/
