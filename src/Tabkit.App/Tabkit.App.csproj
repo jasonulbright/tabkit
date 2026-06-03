@@ -9,6 +9,7 @@
     <RollForward>LatestMajor</RollForward>
     <RootNamespace>Tabkit.App</RootNamespace>
     <AssemblyName>tabkit-app</AssemblyName>
+    <ApplicationIcon>..\..\installer\branding\app.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

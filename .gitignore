@@ -24,3 +24,8 @@ Thumbs.db
 # External test corpus — fetched on demand, see tests/fixtures/external/ATTRIBUTION.md
 /tests/fixtures/external/book/
 /tests/fixtures/external/server-client/
+# Installer build output — payload is published from source via installer/build.ps1.
+# The .nsi, build.ps1, and branding assets are kept; generated artifacts are not.
+/installer/payload/
+/installer/*.exe
+/installer/branding/*-preview.png

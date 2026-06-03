@@ -73,7 +73,22 @@ See [docs/architecture.md](docs/architecture.md) for the engine layout and where
 
 ## Install
 
-No prebuilt installer yet — build from source:
+### Desktop app — Windows installer
+
+Build the installer from source (requires [NSIS](https://nsis.sourceforge.io) and the .NET 10 SDK):
+
+```
+pwsh .\installer\build.ps1
+```
+
+This publishes the WPF app and produces `installer\Tabkit-Setup-<version>.exe` — a
+per-user installer (no admin elevation) that adds Start-menu / desktop shortcuts and an
+uninstaller. It's framework-dependent, so the target machine needs the
+[.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) (the
+installer checks for it and warns if it's missing). See [installer/](installer/) for the
+NSIS script and branding assets.
+
+### Build from source
 
 ```
 git clone https://github.com/jasonulbright/tabkit.git
@@ -92,6 +107,7 @@ src\Tabkit.App\bin\Release\net10.0-windows\tabkit-app.exe
 Requirements:
 - .NET 10 SDK
 - Windows for the desktop app (`net10.0-windows`); the CLI runs anywhere .NET 10 does
+- NSIS, only if building the installer
 
 ## What rules ship
 
