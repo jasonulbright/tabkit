@@ -4,7 +4,7 @@ All notable changes to tabkit are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [POC]
+## [0.2.0] — 2026-06-03 (POC)
 
 First public cut of the .NET 10 toolkit: a single solution shipping a
 cross-platform CLI (`tabkit`) and a Windows desktop app (`tabkit-app`) over one
@@ -44,6 +44,11 @@ Server, no REST API, no account.
   and JSON / SARIF / HTML export.
 - Settings persisted to `%APPDATA%\Tabkit\settings.json`; corrupt or missing
   files fall back to defaults without crashing.
+
+**Packaging**
+- Windows installer for the desktop app (NSIS): per-user, no elevation, Start-menu
+  and desktop shortcuts, uninstaller, and a .NET 10 Desktop Runtime check.
+  Built from source via `installer/build.ps1`.
 
 ### Safety
 
