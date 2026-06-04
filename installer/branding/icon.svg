@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  tabkit app icon — vector master.
+  Rounded-square 'tk' monogram on a 135° blue gradient, matching the brand-mark
+  in the HTML audit report (Tabkit.Core/Output/HtmlOutput.cs).
+  Rasterized to app.ico / icon-256.png / installer bitmaps by generate-branding.ps1.
+  Palette: brand #46A0F2 -> brand-dim #1B57AD ; monogram #FFFFFF.
+-->
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#46A0F2"/>
+      <stop offset="1" stop-color="#1B57AD"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="256" height="256" rx="56" ry="56" fill="url(#brand)"/>
+  <text x="128" y="128"
+        font-family="Segoe UI, Inter, Arial, sans-serif"
+        font-weight="700" font-size="150"
+        fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">tk</text>
+</svg>
